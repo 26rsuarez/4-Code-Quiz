@@ -7,3 +7,9 @@ header {
 .time {
     float: right;
 }
+
+.container {
+    max-width: 500px;
+    text-align: center;
+    
+}
