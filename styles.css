@@ -1,0 +1,9 @@
+header {
+    text-align: left;
+    font-size: 20px;
+    color: purple;
+}
+
+.time {
+    float: right;
+}
