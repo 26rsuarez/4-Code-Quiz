@@ -15,12 +15,20 @@
   <body>
     <header>View Highscores<span class="time">Time</span></header>
     <div class="container">
-      <h1>Coding Quiz Challenge</h1>
-      <div class="questions">
+      <!-- This is the start page that will be hidden when the timer starts -->
+      <div id="startpage" class="start">
+        <h1>Coding Quiz Challenge</h1>
+        <p>
         Try to answer the code-related questions within the time limit. Keep in
         mind that wrong answers will penalize your time by 10 seconds.
+        </p>
+        <button id="start">Start</button>
       </div>
-      <button id="start">Start</button>
+      <!-- this will hold the questions that will be shown when the start is pressed -->
+      <div id="questions" class="hide"></div>
+        <ul class="choices"></ul>
+      <!-- The endpage will be shown at the end will have the result and will let you go to high scores -->
+      <div id="results" class="hide"></div>
     </div>
     <script src="script.js"></script>
   </body>
