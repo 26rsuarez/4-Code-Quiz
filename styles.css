@@ -18,3 +18,7 @@ header {
 .hide {
     display: none;
 }
+
+.choices {
+    text-align: left;
+}
