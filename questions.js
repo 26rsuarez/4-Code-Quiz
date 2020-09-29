@@ -1,5 +1,6 @@
 // this object will hold the questions and answers
 // the correct answer is always the first answer in the array
+// the choices will be randomized in the question rendering
 var questions = {
     "1": {
         "title": "Commonly used data types DO NOT include:",
@@ -30,19 +31,24 @@ var startPage = document.getElementById("startpage");
 var questionPage = document.getElementById("questions");
 var choiceDiv = document.querySelector(".choices");
 var time = document.querySelector(".time");
-var feedback = document.getElementById("feedback");
+var resultDiv = document.getElementById("results")
+var feedbackDiv = document.getElementById("feedback");
 
+// global variables
 var questionNumber = 1;
 var secondsLeft = 75;
 
-
 // this function will run the timer
 function timer() {
+        interval = setInterval(function() {
+            time.textContent="Time:"+secondsLeft;
+            secondsLeft --;
+
+            if (secondsLeft===0){
+                results();
+            }
+        }, 1000)
     
-    interval = setInterval(function() {
-        time.textContent="Time:"+secondsLeft;
-        secondsLeft --;
-    }, 1000)
 
 }
 
@@ -59,29 +65,36 @@ startPage.addEventListener("click", function(event){
 
 })
 
+// this function shows the results at the end of the test
+function results(){
+    clearInterval(interval)
+    questionPage.setAttribute("class", "hide")
+    resultDiv.removeAttribute("class");
+}
+
 // this function will render a new question, given the number of the question
 function renderQuestion(questionNumber) {
+    // need to clear html for rendering a new question 
     choiceDiv.innerHTML="";
-    feedback.innerHTML="";
     // first the question title is rendered
     var questionTitle = document.querySelector(".question-title");
     questionTitle.textContent = questions[questionNumber].title;
 
-    // choicePosition is used to randomize the answers. a random number is chosen
-    // that number will be index of the first answer
-    // then the number is taken off to not be used again
-    /* the button is created with the answer as the text */
-
+    /* choicePosition is used to randomize the answers.*/
     var choicePosition=["0", "1", "2", "3"];
-    for (var j=0; j<questions[questionNumber].choices.length; j++){
+    for (var j=0; j<4; j++){
+        // a random number is chosen
         var randomIndex = Math.floor(Math.random()*choicePosition.length);
+        // a button will be created
         var buttonChoice = document.createElement("button");
+        // that button will be the first answer and will have the text of the index equal to the choice position number
         buttonChoice.textContent=(j+1) + ". " + questions[questionNumber].choices[choicePosition[randomIndex]];
-        // the data index is the same as the choice so i can use it to check if it's correct or not
+        // i set the data index the same as the choice so i can use it to check if it's correct or not
         buttonChoice.setAttribute("data-index", questions[questionNumber].choices[choicePosition[randomIndex]]);
         choiceDiv.appendChild(buttonChoice);
         var lineBreak = document.createElement("br");
         choiceDiv.appendChild(lineBreak);
+        // then the number is taken off the choicePosition array to not be used again
         choicePosition.splice(randomIndex, 1);
 
     }
@@ -89,10 +102,12 @@ function renderQuestion(questionNumber) {
 
 // the function uses the index and compares it to the first element of the choices to see if it's correct
 function checkAnswer(index) {
-    feedback.removeAttribute("class", "hide");
+    feedbackDiv.innerHTML="";
+    feedbackDiv.removeAttribute("class", "hide");
     var line = document.createElement("hr");
-    feedback.appendChild(line);
+    feedbackDiv.appendChild(line);
     var checked = document.createElement("p");
+
     if (index===questions[questionNumber].choices[0]) {
         console.log(true);
         checked.textContent = "Correct!";
@@ -103,12 +118,19 @@ function checkAnswer(index) {
         secondsLeft -=10;
         checked.textContent = "False!";
     };
-    feedback.appendChild(checked);
+    feedbackDiv.appendChild(checked);
     questionNumber++;
-    renderQuestion(questionNumber);
+    
+    // if the questionNumber exceeds the number of questions the results funciton will be called 
+    if (questionNumber>Object.keys(questions).length) {
+        results();
+    } else {
+        renderQuestion(questionNumber);
+    }
+    
 }
 
-// this event will check if the user clicked the correct answer, then call the render answer page
+// this event will see what the user clicked then call the check answer page with the data index of the button clicked
 questionPage.addEventListener("click", function(event){
     event.preventDefault();
     if(event.target.matches("button")) {
