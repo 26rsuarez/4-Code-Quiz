@@ -33,17 +33,19 @@ var choiceDiv = document.querySelector(".choices");
 var time = document.querySelector(".time");
 var resultDiv = document.getElementById("results")
 var feedbackDiv = document.getElementById("feedback");
+var finalScore = document.querySelector(".final-score")
 
 // global variables
 var questionNumber = 1;
+var totalQuestions = Object.keys(questions).length;
 var secondsLeft = 75;
 
 // this function will run the timer
 function timer() {
         interval = setInterval(function() {
-            time.textContent="Time:"+secondsLeft;
             secondsLeft --;
-
+            renderTime();
+            
             if (secondsLeft===0){
                 results();
             }
@@ -52,30 +54,25 @@ function timer() {
 
 }
 
-
-// when the start button is clicked the startpage is hidden, the questions are shown
-startPage.addEventListener("click", function(event){
-    if (event.target.matches("button")){
-        startPage.setAttribute("class", "hide");
-        questionPage.removeAttribute("class");
-        timer();
-        renderQuestion(questionNumber);
-        
-    }
-
-})
+// this function will show the time on the page
+function renderTime () {
+    time.textContent="Time: " +secondsLeft;
+}
 
 // this function shows the results at the end of the test
 function results(){
-    clearInterval(interval)
-    questionPage.setAttribute("class", "hide")
+    clearInterval(interval);
+    questionPage.setAttribute("class", "hide");
     resultDiv.removeAttribute("class");
+    finalScore.textContent=secondsLeft;
+
 }
 
 // this function will render a new question, given the number of the question
 function renderQuestion(questionNumber) {
-    // need to clear html for rendering a new question 
+    // need to clear html for rendering a new question and remove feedback
     choiceDiv.innerHTML="";
+    removeFeedback();
     // first the question title is rendered
     var questionTitle = document.querySelector(".question-title");
     questionTitle.textContent = questions[questionNumber].title;
@@ -100,7 +97,7 @@ function renderQuestion(questionNumber) {
     }
 }
 
-// the function uses the index and compares it to the first element of the choices to see if it's correct
+// this function uses the index and compares it to the first element of the choices to see if it's correct
 function checkAnswer(index) {
     feedbackDiv.innerHTML="";
     feedbackDiv.removeAttribute("class", "hide");
@@ -116,19 +113,45 @@ function checkAnswer(index) {
     else{
         console.log(false);
         secondsLeft -=10;
+        renderTime();
+        console.log(secondsLeft);
         checked.textContent = "False!";
     };
     feedbackDiv.appendChild(checked);
     questionNumber++;
     
     // if the questionNumber exceeds the number of questions the results funciton will be called 
-    if (questionNumber>Object.keys(questions).length) {
+    if (questionNumber>totalQuestions) {
         results();
     } else {
         renderQuestion(questionNumber);
     }
     
 }
+
+// this function will remove the feedback at the bottom of the screen after four seconds
+function removeFeedback() {
+    var feedbackInterval = setInterval(function() {
+        feedbackDiv.setAttribute("class", "hide");
+    }, 4000)
+}
+
+function setHighScores(initials) {
+    localStorage.setItem("initials", initials);
+    localStorage.setItem("score", secondsLeft);
+}
+
+// when the start button is clicked the startpage is hidden, the questions are shown
+startPage.addEventListener("click", function(event){
+    if (event.target.matches("button")){
+        startPage.setAttribute("class", "hide");
+        questionPage.removeAttribute("class");
+        timer();
+        renderQuestion(questionNumber);
+        
+    }
+
+})
 
 // this event will see what the user clicked then call the check answer page with the data index of the button clicked
 questionPage.addEventListener("click", function(event){
@@ -140,5 +163,5 @@ questionPage.addEventListener("click", function(event){
     }
 })
 
-
+resultDiv.addEventListener("submit", setHighScores);
 
