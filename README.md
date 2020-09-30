@@ -1,6 +1,6 @@
 # 4-Code-Quiz
 
-This assignment was meant to develop a multiple choice quiz. The quiz features dynamically updated HTML and CSS powered by Javascript code. The interface is clean and responsive. The quiz stores the highest score in the local storage. The quiz is supposed to satisfy the following criteria.
+This assignment was meant to develop a multiple choice quiz. The quiz features dynamically updated HTML and CSS powered by Javascript code. The interface is clean and responsive. The quiz stores the score in the local storage. The quiz is supposed to satisfy the following criteria.
 
 ## Acceptance Criteria
 
