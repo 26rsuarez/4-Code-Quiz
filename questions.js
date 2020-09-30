@@ -33,12 +33,16 @@ var choiceDiv = document.querySelector(".choices");
 var time = document.querySelector(".time");
 var resultDiv = document.getElementById("results")
 var feedbackDiv = document.getElementById("feedback");
-var finalScore = document.querySelector(".final-score")
+var finalScore = document.querySelector(".final-score");
+var initialsDiv = document.getElementById("initials");
+var submitButton = document.getElementById("submit");
+var headerLink = document.getElementById("header");
 
 // global variables
 var questionNumber = 1;
 var totalQuestions = Object.keys(questions).length;
 var secondsLeft = 75;
+var timesTaken = 0;
 
 // this function will run the timer
 function timer() {
@@ -114,13 +118,12 @@ function checkAnswer(index) {
         console.log(false);
         secondsLeft -=10;
         renderTime();
-        console.log(secondsLeft);
         checked.textContent = "False!";
     };
     feedbackDiv.appendChild(checked);
     questionNumber++;
     
-    // if the questionNumber exceeds the number of questions the results funciton will be called 
+    // if the questionNumber exceeds the number of questions the results function will be called 
     if (questionNumber>totalQuestions) {
         results();
     } else {
@@ -129,21 +132,25 @@ function checkAnswer(index) {
     
 }
 
-// this function will remove the feedback at the bottom of the screen after four seconds
+// this function will remove the feedback at the bottom of the screen after three seconds
 function removeFeedback() {
     var feedbackInterval = setInterval(function() {
         feedbackDiv.setAttribute("class", "hide");
-    }, 4000)
+    }, 3000)
 }
 
-function setHighScores(initials) {
-    localStorage.setItem("initials", initials);
-    localStorage.setItem("score", secondsLeft);
-}
+
+function setHighScores() {
+        var initials = initialsDiv.value;
+        localStorage.setItem("initials", initials);
+        localStorage.setItem("results", secondsLeft);
+    }
+
 
 // when the start button is clicked the startpage is hidden, the questions are shown
 startPage.addEventListener("click", function(event){
     if (event.target.matches("button")){
+        timesTaken++;
         startPage.setAttribute("class", "hide");
         questionPage.removeAttribute("class");
         timer();
@@ -163,5 +170,20 @@ questionPage.addEventListener("click", function(event){
     }
 })
 
-resultDiv.addEventListener("submit", setHighScores);
+// this will redirect to results html
+resultDiv.addEventListener("click", function(event){
+    if(event.target.matches("button")) {
+        setHighScores();
+        window.location.replace("highscore.html");
+    }
+})
+
+// this will also redirect to results html by clicking view highscores
+headerLink.addEventListener("click", function(event){
+    if(event.target.matches("#header")) {
+        window.location.replace("highscore.html");
+    }
+})
+
+
 

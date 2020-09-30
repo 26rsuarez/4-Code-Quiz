@@ -22,3 +22,8 @@ header {
 .choices {
     text-align: left;
 }
+
+button {
+    color: white;
+    background-color: purple;
+}
