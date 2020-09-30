@@ -90,8 +90,9 @@ function renderQuestion(questionNumber) {
         var buttonChoice = document.createElement("button");
         // that button will be the first answer and will have the text of the index equal to the choice position number
         buttonChoice.textContent=(j+1) + ". " + questions[questionNumber].choices[choicePosition[randomIndex]];
-        // i set the data index the same as the choice so i can use it to check if it's correct or not
+        // the data index is the same as the choice text so i can use it to check if it's correct or not
         buttonChoice.setAttribute("data-index", questions[questionNumber].choices[choicePosition[randomIndex]]);
+        buttonChoice.setAttribute("class", "btn btn-outline-success");
         choiceDiv.appendChild(buttonChoice);
         var lineBreak = document.createElement("br");
         choiceDiv.appendChild(lineBreak);
@@ -139,7 +140,8 @@ function removeFeedback() {
     }, 3000)
 }
 
-
+// this will store the score and initials in storage, however at the moment it can only store one
+//may be able to fix with a detabase in the future
 function setHighScores() {
         var initials = initialsDiv.value;
         localStorage.setItem("initials", initials);
