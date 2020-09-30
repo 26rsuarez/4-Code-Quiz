@@ -119,7 +119,7 @@ function checkAnswer(index) {
         console.log(false);
         secondsLeft -=10;
         renderTime();
-        checked.textContent = "False!";
+        checked.textContent = "Wrong!";
     };
     feedbackDiv.appendChild(checked);
     questionNumber++;
